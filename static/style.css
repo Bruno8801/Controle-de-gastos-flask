@@ -1,0 +1,159 @@
+/* Estilo geral da página */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 20px;
+}
+
+.cabecalho {
+    position: relative;
+    background-image: url('/static/imagens/cabecalho.jpg');
+    background-size: contain;       /* cobre toda a área */
+    background-position: center;  /* centraliza a imagem */
+    height: 45px;              /* aumenta a área do cabeçalho */
+    padding: 60px 20px;           /* espaço interno */
+    text-align: center;
+    color: rgb(255, 255, 255);
+    overflow: hidden;
+}
+
+.cabecalho::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* sobreposição escura */
+    z-index: 1;
+}
+
+.cabecalho h1 {
+    position: relative;
+    z-index: 2;
+    margin: 0;
+    font-size: 32px;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+h2 {
+    color: #333;
+}
+
+/* Container que centraliza a tabela */
+.tabela-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+/* Ativa rolagem lateral em telas pequenas */
+.tabela-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Estilo da tabela */
+table {
+    min-width: 600px;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+/* Estilo das células */
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+    word-break: break-word;
+}
+
+/* Cabeçalho da tabela */
+table th {
+    background-color: #007BFF;
+    color: white;
+}
+
+/* Estilo dos botões */
+button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    margin-top: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 4px;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+/* Estilo para input submit */
+input[type="submit"]:hover {
+    background-color: #218838;
+}
+
+/* Estilo dos formulários */
+form {
+    margin-bottom: 20px;
+}
+
+/* Animação de exclusão */
+.fade-out {
+    animation: fadeOut 0.5s forwards;
+}
+
+/* Cores de alerta para o saldo restante */
+.saldo-verde {
+    color: #28a745; /* verde */
+    font-weight: bold;
+}
+
+.saldo-laranja {
+    color: #fd7e14; /* laranja */
+    font-weight: bold;
+}
+
+.saldo-vermelho {
+    color: #dc3545; /* vermelho */
+    font-weight: bold;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        height: auto;
+    }
+    to {
+        opacity: 0;
+        height: 0;
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+    }
+}
+
+/* Para telas de celular */
+@media (max-width: 600px) {
+    .tabela-container {
+        max-width: 100%;
+        padding: 5px;
+    }
+
+    table th, table td {
+        font-size: 13px;
+        padding: 6px 8px;
+    }
+
+    button {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+
+    button img {
+        width: 16px;
+    }
+}
