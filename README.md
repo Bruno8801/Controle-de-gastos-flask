@@ -19,6 +19,6 @@ pip install -r requirements.txt
 python app.py
 
 Autor
-Bruno — estudante de Ciência da Computação
+Bruno Rodrigues — estudante de Ciência da Computação
 
 ---
