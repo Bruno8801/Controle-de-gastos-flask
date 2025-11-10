@@ -17,8 +17,6 @@ Aplicação web simples para registrar e visualizar gastos pessoais. Desenvolvid
 ```bash
 pip install -r requirements.txt
 python app.py
-
+---
 Autor
 Bruno Rodrigues — estudante de Ciência da Computação
-
----
