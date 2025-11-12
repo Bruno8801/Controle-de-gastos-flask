@@ -5,6 +5,10 @@ app = Flask(__name__)
 gastos = []
 saldo_inicial = 0.0
 
+# ⚠️ Este backend está desativado no momento.
+# O app usa LocalStorage via JavaScript para armazenar dados localmente.
+# Este código será útil para implementação de login e banco de dados no futuro.
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     global saldo_inicial
@@ -46,113 +50,53 @@ def index():
     </div>  
     <head>
         <link rel="stylesheet" href="/static/style.css">
+        <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+        <script src="/static/script.js" defer></script>
     </head>
 
     <h2>Definir Saldo Inicial</h2>
-    <form method="POST" style="display:inline;">
-        Digite quanto você tem disponível (R$): 
-        <input type="text" name="saldo" placeholder="Ex: 1000,00">
-        <input type="submit" value="Definir ou Editar saldo">
-    </form>
+    <label for="saldo-inicial">Digite quanto você tem disponível (R$):</label>
+    <input type="text" id="saldo-inicial" placeholder="Ex: 1000,00">
+    <button onclick="definirSaldo()">Definir ou Editar saldo</button>
 
-    <p><strong>Saldo disponível:</strong> R$ {{ "%.2f"|format(saldo_inicial or 0.0) }}</p>
+    <p><strong>Saldo disponível:</strong> R$ <span id="saldo-disponivel">0.00</span></p>
 
     <h2>Adicionar Gasto</h2>
-    <form method="POST">
-        Digite o valor do gasto (R$): <input type="text" name="valor"><br>
-        Digite a categoria (ex: mercado, transporte): <input type="text" name="categoria"><br>
-        Digite a data (DDMMAAAA): <input type="text" name="data"><br>
-        <input type="submit" value="Adicionar gasto">
-    </form>
+    <label for="valor">Digite o valor do gasto (R$):</label>
+    <input type="text" id="valor"><br>
+    <label for="categoria">Digite a categoria (ex: mercado, transporte):</label>
+    <input type="text" id="categoria"><br>
+    <label for="data">Digite a data (DDMMAAAA):</label>
+    <input type="text" id="data"><br>
+    <button onclick="adicionarGasto()">Adicionar gasto</button>
 
     <h2>Tabela de Gastos</h2>
     <div class="tabela-container">
         <div class="tabela-scroll">
-            <table>
+            <table id="tabela-gastos">
                 <tr>
                     <th>Valor</th>
                     <th>Categoria</th>
                     <th>Data</th>
                     <th>Ações</th>
                 </tr>
-                {% for g in gastos %}
-                <tr>
-                    <td>R$ {{ "%.2f"|format(g["valor"]) }}</td>
-                    <td>{{ g["categoria"] }}</td>
-                    <td>{{ g["data"] }}</td>
-                    <td>
-                    <button type="button" onclick="excluirComAnimacao(this, '{{ loop.index0 }}')">
-                        Excluir
-                    </button>
-                    </td>
-                </tr>
-                {% endfor %}
             </table>
         </div>
     </div>
 
-    <script>
-        function excluirComAnimacao(botao, indice) {
-            const linha = botao.closest("tr");
-            linha.classList.add("fade-out");
+    <p><strong>Total de gastos:</strong> R$ <span id="total-gastos">0.00</span></p>
+    <p><strong>Saldo inicial:</strong> <span id="saldo-inicial-final">0.00</span></p>
+    <p><strong>Saldo restante:</strong> <span id="saldo-restante">0.00</span></p>
 
-            setTimeout(() => {
-                const form = document.createElement("form");
-                form.method = "POST";
-                form.action = "/excluir";
+    <button onclick="exportarCSV()">
+        <img src="/static/icons/csv.png" style="width:20px; vertical-align:middle; margin-right:6px;">
+        Exportar CSV
+    </button>
 
-                const input = document.createElement("input");
-                input.type = "hidden";
-                input.name = "indice";
-                input.value = indice;
-
-                form.appendChild(input);
-                document.body.appendChild(form);
-                form.submit();
-            }, 500);
-        }
-    </script>
-
-    <p><strong>Total de gastos:</strong> R$ {{ "%.2f"|format(total) }}</p>
-    <p><strong>Saldo inicial:</strong> <span id="saldo-disponivel">R$ {{ "%.2f"|format(saldo_inicial) }}</span></p>
-    <p><strong>Saldo restante:</strong> <span id="saldo-restante">R$ {{ "%.2f"|format(saldo) }}</span></p>
-    <form method="GET" action="/exportar">
-    <form method="GET" action="/exportar">
-        <button type="submit">
-            <img src="/static/icons/csv.png" style="width:20px; vertical-align:middle; margin-right:6px;">
-            Exportar CSV
-        </button>
-    </form>
-
-    <form method="GET" action="/exportar_excel">
-        <button type="submit">
-            <img src="/static/icons/excel.png" style="width:20px; vertical-align:middle; margin-right:6px;">
-            Exportar Excel
-        </button>
-    </form>
-
-    <script>
-        const saldoDisponivelEl = document.getElementById("saldo-disponivel");
-        const saldoRestanteEl = document.getElementById("saldo-restante");
-
-        if (saldoDisponivelEl && saldoRestanteEl) {
-            const textoDisponivel = saldoDisponivelEl.textContent.replace("R$", "").replace(",", ".").trim();
-            const textoRestante = saldoRestanteEl.textContent.replace("R$", "").replace(",", ".").trim();
-
-            const saldoDisponivel = parseFloat(textoDisponivel);
-            const saldoRestante = parseFloat(textoRestante);
-
-            const porcentagem = (saldoRestante / saldoDisponivel) * 100;
-
-            if (porcentagem >= 50) {
-                saldoRestanteEl.classList.add("saldo-verde");
-            } else if (porcentagem >= 15) {
-                saldoRestanteEl.classList.add("saldo-laranja");
-            } else {
-                saldoRestanteEl.classList.add("saldo-vermelho");
-            }
-        }
-    </script>
+    <button onclick="exportarExcel()">
+        <img src="/static/icons/excel.png" style="width:20px; vertical-align:middle; margin-right:6px;">
+        Exportar Excel
+    </button>
     """
     return render_template_string(html, gastos=gastos, total=total, saldo_inicial=saldo_inicial, saldo=saldo_restante)
     

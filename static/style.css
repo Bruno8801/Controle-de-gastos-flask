@@ -45,6 +45,7 @@ h2 {
     max-width: 700px;
     margin: 0 auto;
     padding: 10px;
+    perspective: 800px;
 }
 
 /* Ativa rolagem lateral em telas pequenas */
@@ -103,7 +104,28 @@ form {
 
 /* Animação de exclusão */
 .fade-out {
-    animation: fadeOut 0.5s forwards;
+  transform-origin: center;
+  animation: virarDeCostas 0.6s ease-out forwards;
+}
+
+@keyframes virarDeCostas {
+  0% {
+    background-color: #ffcccc;
+    opacity: 1;
+    transform: rotateY(0deg);
+    filter: blur(0);
+  }
+  50% {
+    background-color: #ff6666;
+    transform: rotateY(90deg);
+    filter: blur(1px);
+  }
+  100% {
+    background-color: #ff0000;
+    opacity: 0;
+    transform: rotateY(180deg);
+    filter: blur(4px);
+  }
 }
 
 /* Cores de alerta para o saldo restante */
