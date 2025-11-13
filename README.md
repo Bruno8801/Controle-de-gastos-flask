@@ -20,3 +20,5 @@ python app.py
 ---
 Autor
 Bruno Rodrigues — estudante de Ciência da Computação
+## Como rodar na Web
+https://controle-de-gastos-flask.onrender.com
